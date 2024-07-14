@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { AccessToken } from './types/AccessToken';
-import { RegisterRequestDto } from './dtos/register-request.dto';
+import { RegisterRequestDto } from './dto/register-request.dto';
 import { UserService } from 'src/user/user.service';
 import { UserDocument } from 'src/user/user.schema';
 
@@ -16,11 +16,11 @@ export class AuthService {
   async validateUser(email: string, password: string) {
     const user = await this.usersService.findByEmail(email);
     if (!user) {
-      throw new BadRequestException('User not found');
+      throw new BadRequestException('Wrong Credentials');
     }
     const isMatch: boolean = bcrypt.compareSync(password, user.password);
     if (!isMatch) {
-      throw new BadRequestException('Password does not match');
+      throw new BadRequestException('Wrong Credentials');
     }
     return user;
   }
@@ -32,10 +32,9 @@ export class AuthService {
 
   async register(user: RegisterRequestDto): Promise<AccessToken> {
     const existingUser = await this.usersService.findByEmail(user.email);
-    console.log(existingUser);
 
     if (existingUser) {
-      throw new BadRequestException('email already exists');
+      throw new BadRequestException('Wrong Credentials');
     }
     const hashedPassword = await bcrypt.hash(user.password, 10);
     const newUser = { ...user, password: hashedPassword };

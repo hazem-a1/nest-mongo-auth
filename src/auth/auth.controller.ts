@@ -9,9 +9,9 @@ import {
 import { AuthService } from './auth.service';
 
 import { AuthGuard } from '@nestjs/passport';
-import { RegisterRequestDto } from './dtos/register-request.dto';
-import { LoginResponseDTO } from './dtos/login-response.dto';
-import { RegisterResponseDTO } from './dtos/register-response.dto';
+import { RegisterRequestDto } from './dto/register-request.dto';
+import { LoginResponseDTO } from './dto/login-response.dto';
+import { RegisterResponseDTO } from './dto/register-response.dto';
 import { Public } from './decorators/public.decorator';
 
 @Public()
