@@ -22,6 +22,7 @@ async function bootstrap() {
       },
     }),
   );
+  app.setGlobalPrefix('api');
   app.useGlobalGuards(new JwtGuard(app.get(Reflector)));
 
   const config = new DocumentBuilder()
