@@ -39,11 +39,20 @@ export class AuthController {
   @UseGuards(AuthGuard('local'))
   @Post('login')
   async login(@Request() req): Promise<LoginResponseDTO | BadRequestException> {
-    console.log(req.user);
-
     return this.authService.login(req.user);
   }
 
+  @ApiBody({
+    type: RegisterRequestDto,
+  })
+  @ApiResponse({
+    schema: {
+      type: 'object',
+      properties: {
+        accessToken: { type: 'string' },
+      },
+    },
+  })
   @Post('register')
   async register(
     @Body() registerBody: RegisterRequestDto,
