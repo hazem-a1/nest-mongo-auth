@@ -13,15 +13,31 @@ import { RegisterRequestDto } from './dto/register-request.dto';
 import { LoginResponseDTO } from './dto/login-response.dto';
 import { RegisterResponseDTO } from './dto/register-response.dto';
 import { Public } from './decorators/public.decorator';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { LoginRequestDto } from './dto/login-request.dto';
 
 @Public()
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @ApiBody({
+    type: LoginRequestDto,
+  })
+  @ApiResponse({
+    schema: {
+      type: 'object',
+      properties: {
+        accessToken: { type: 'string' },
+      },
+    },
+  })
   @UseGuards(AuthGuard('local'))
   @Post('login')
   async login(@Request() req): Promise<LoginResponseDTO | BadRequestException> {
+    console.log(req.user);
+
     return this.authService.login(req.user);
   }
 

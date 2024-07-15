@@ -1,5 +1,5 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { isValidObjectId, Model } from 'mongoose';
+import { Injectable } from '@nestjs/common';
+import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './user.schema';
 
@@ -17,10 +17,7 @@ export class UserService {
   }
 
   async findOne(id: string) {
-    if (!isValidObjectId(id)) {
-      throw new BadRequestException('Bad Id');
-    }
-    return this.userModel.findOne({ _id: id }).exec();
+    return this.userModel.findOne({ _id: id }, '-password -__v').exec();
   }
 
   async findByEmail(email: string) {
@@ -30,16 +27,10 @@ export class UserService {
   }
 
   async delete(id: string) {
-    if (!isValidObjectId(id)) {
-      throw new BadRequestException('Bad Id');
-    }
     return this.userModel.findByIdAndDelete({ _id: id }).exec();
   }
 
   async update(id: string, user: Partial<User>) {
-    if (!isValidObjectId(id)) {
-      throw new BadRequestException('Bad Id');
-    }
     return this.userModel.findByIdAndUpdate({ _id: id }, user, {
       new: true,
     });
