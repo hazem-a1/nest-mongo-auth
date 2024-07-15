@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LocalStrategy } from './strategy/local.strategy';
-import { AuthController } from './auth.controller';
+import { AuthController } from './auth.v1.controller';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { UserModule } from 'src/user/user.module';
 

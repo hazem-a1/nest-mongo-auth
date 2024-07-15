@@ -1,6 +1,6 @@
 import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { JwtGuard } from './auth/guards/jwt.guard';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
@@ -8,6 +8,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: console,
     cors: true,
+  });
+  app.enableVersioning({
+    type: VersioningType.URI,
   });
   app.useGlobalPipes(
     new ValidationPipe({
@@ -25,8 +28,9 @@ async function bootstrap() {
     .setTitle('Nest Auth API')
     .setDescription('using nest js to create a simple auth api')
     .setVersion('1.0')
-    .addTag('Nest Auth API')
+    .addTag('Nest Auth API version 1')
     .addBearerAuth()
+    .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);

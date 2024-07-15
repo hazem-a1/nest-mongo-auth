@@ -17,8 +17,11 @@ import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LoginRequestDto } from './dto/login-request.dto';
 
 @Public()
-@ApiTags('auth')
-@Controller('auth')
+@ApiTags('auth-v1')
+@Controller({
+  path: 'auth',
+  version: '1',
+})
 export class AuthController {
   constructor(private authService: AuthService) {}
 

@@ -5,8 +5,11 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { IsObjectIdPipe } from 'src/common/pipe/is-object-id.pipe';
 
 @ApiBearerAuth()
-@ApiTags('user')
-@Controller('user')
+@ApiTags('user-v1')
+@Controller({
+  path: 'user',
+  version: '1',
+})
 export class UserController {
   constructor(private readonly usersService: UserService) {}
 
