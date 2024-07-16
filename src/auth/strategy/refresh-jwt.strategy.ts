@@ -19,7 +19,6 @@ export class RefreshJwtStrategy extends PassportStrategy(
       ignoreExpiration: false,
       secretOrKey: configService.get('REFRESH_JWT_SECRET'),
     });
-    console.log('RefreshJwtStrategy', configService.get('REFRESH_JWT_SECRET'));
   }
 
   async validate(payload: RefreshJWTPayload) {
