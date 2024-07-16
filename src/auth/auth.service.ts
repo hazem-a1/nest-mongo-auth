@@ -1,17 +1,17 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { AccessToken } from './types/AccessToken';
 import { RegisterRequestDto } from './dto/register-request.dto';
 import { UserService } from 'src/user/user.service';
-import { UserDocument } from 'src/user/user.schema';
+import { UserDocument } from 'src/user/schema/user.schema';
 import { CryptoService } from 'src/crypto/crypto.service';
+import { AuthRefreshTokenService } from './auth-refresh-token.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UserService,
-    private jwtService: JwtService,
     private cryptoService: CryptoService,
+    private readonly authRefreshTokenService: AuthRefreshTokenService,
   ) {}
 
   async validateUser(email: string, password: string) {
@@ -23,15 +23,14 @@ export class AuthService {
       password,
       user.password,
     );
-    if (!isMatch) {
-      throw new BadRequestException('Wrong Credentials');
+    if (isMatch) {
+      return user;
     }
-    return user;
+    throw new BadRequestException('Wrong Credentials');
   }
 
   async login(user: UserDocument): Promise<AccessToken> {
-    const payload = { email: user.email, id: user._id };
-    return { access_token: this.jwtService.sign(payload) };
+    return this.authRefreshTokenService.generateTokenPair(user);
   }
 
   async register(user: RegisterRequestDto): Promise<AccessToken> {

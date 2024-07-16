@@ -1,6 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { UserService } from './user.service';
-import { User } from './user.schema';
+import { User } from './schema/user.schema';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { IsObjectIdPipe } from 'src/common/pipe/is-object-id.pipe';
 

@@ -7,10 +7,17 @@ import { AuthController } from './auth.v1.controller';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { UserModule } from 'src/user/user.module';
 import { CryptoService } from 'src/crypto/crypto.service';
+import { MongooseModule } from '@nestjs/mongoose';
+import { RefreshToken, RefreshTokenSchema } from './schema/refreshToken.schema';
+import { AuthRefreshTokenService } from './auth-refresh-token.service';
+import { RefreshJwtStrategy } from './strategy/refresh-jwt.strategy';
 
 @Module({
   imports: [
     UserModule,
+    MongooseModule.forFeature([
+      { name: RefreshToken.name, schema: RefreshTokenSchema },
+    ]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -27,7 +34,14 @@ import { CryptoService } from 'src/crypto/crypto.service';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, CryptoService],
+  providers: [
+    AuthService,
+    AuthRefreshTokenService,
+    LocalStrategy,
+    JwtStrategy,
+    RefreshJwtStrategy,
+    CryptoService,
+  ],
   exports: [AuthService, JwtModule],
 })
 export class AuthModule {}

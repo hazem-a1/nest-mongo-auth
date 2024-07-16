@@ -11,7 +11,9 @@ async function bootstrap() {
   });
   app.enableVersioning({
     type: VersioningType.URI,
+    defaultVersion: '1',
   });
+  app.setGlobalPrefix('api');
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -22,7 +24,6 @@ async function bootstrap() {
       },
     }),
   );
-  app.setGlobalPrefix('api');
   app.useGlobalGuards(new JwtGuard(app.get(Reflector)));
 
   const config = new DocumentBuilder()
