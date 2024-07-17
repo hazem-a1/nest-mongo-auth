@@ -5,6 +5,7 @@ import { UserService } from 'src/user/user.service';
 import { UserDocument } from 'src/user/schema/user.schema';
 import { CryptoService } from 'src/crypto/crypto.service';
 import { AuthRefreshTokenService } from './auth-refresh-token.service';
+import { AuthProvider } from 'src/user/enum/userProvider.enum';
 
 @Injectable()
 export class AuthService {
@@ -40,7 +41,11 @@ export class AuthService {
       throw new BadRequestException('Wrong Credentials');
     }
     const hashedPassword = await this.cryptoService.generateHash(user.password);
-    const newUser = { ...user, password: hashedPassword };
+    const newUser = {
+      ...user,
+      password: hashedPassword,
+      provider: AuthProvider.LOCAL,
+    };
     const result = await this.usersService.create(newUser);
     return this.login(result);
   }

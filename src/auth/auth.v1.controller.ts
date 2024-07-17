@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   InternalServerErrorException,
   Post,
   Request,
@@ -18,6 +19,7 @@ import { LoginRequestDto } from './dto/login-request.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtRefreshAuthGuard } from './guards/jwt-refresh.guard';
 import { AuthRefreshTokenService } from './auth-refresh-token.service';
+import { GoogleAuthGuard } from './guards/google.guard';
 
 @ApiTags('auth-v1')
 @Controller({
@@ -49,6 +51,7 @@ export class AuthController {
     return this.authService.login(req.user);
   }
 
+  @Public()
   @ApiBearerAuth()
   @UseGuards(JwtRefreshAuthGuard)
   @Post('refresh-tokens')
@@ -81,5 +84,21 @@ export class AuthController {
     @Body() registerBody: RegisterRequestDto,
   ): Promise<RegisterResponseDTO | BadRequestException> {
     return await this.authService.register(registerBody);
+  }
+
+  // google login
+  @Get('google')
+  @Public()
+  @UseGuards(GoogleAuthGuard)
+  googleLogin() {}
+
+  @Get('google/callback')
+  @Public()
+  @UseGuards(GoogleAuthGuard)
+  googleLoginCallback(@Request() req) {
+    // maybe redirect to the frontend after login and send the token as a query param
+
+    // here we opt out from google tokens and user the internal token mechanism to unify the token generation/parsing
+    return this.authService.login(req.user);
   }
 }
